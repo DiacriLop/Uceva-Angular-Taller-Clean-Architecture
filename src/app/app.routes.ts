@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { UsersPage } from './presentation/pages/users/users.page';
 import { ProductsPage } from './presentation/pages/products/products.page';
 import { VehiclesPage } from './presentation/pages/vehicles/vehicles.page';
+import { DealershipsPage } from './presentation/pages/dealerships/dealerships.page';
 
 /**
  * Definición de las rutas principales de la aplicación.
@@ -47,6 +48,15 @@ export const routes: Routes = [
    * de mostrar y gestionar el listado de vehículos.
    */
   { path: 'vehicles', component: VehiclesPage },
+
+  /**
+   * Ruta de conseccionarios.
+   *
+   * @remarks
+   * Renderiza el componente `DealershipsPage`, encargado
+   * de mostrar y gestionar el listado de conseccionarios.
+   */
+  { path: 'dealerships', component: DealershipsPage },
 
   /**
    * Ruta comodín.
