@@ -13,6 +13,8 @@ import { ProductLocalRepositoryImpl } from './core/infrastructure/repositories/l
 import { VehicleRepository } from './core/domain/repositories/vehicle.repository';
 import { VehicleLocalRepositoryImpl } from './core/infrastructure/repositories/local-implementation/vehicle-local.repository.impl';
 import { VehicleNodeRepositoryImpl } from './core/infrastructure/repositories/node-implementation/vehicle-node.repository.impl';
+import { DealershipRepository } from './core/domain/repositories/dealership.repository';
+import { DealershipLocalRepositoryImpl } from './core/infrastructure/repositories/local-implementation/dealership-local.repository.impl';
 
 /**
  * Configuración principal de la aplicación Angular.
@@ -45,6 +47,7 @@ export const appConfig: ApplicationConfig = {
     { provide: UserRepository, useClass: UserLocalRepositoryImpl },
     { provide: ProductRepository, useClass: ProductLocalRepositoryImpl },
     { provide: VehicleRepository, useClass: VehicleLocalRepositoryImpl },
+    { provide: DealershipRepository, useClass: DealershipLocalRepositoryImpl },
 
     //Node Providers
    // { provide: UserRepository, useClass: UserNodeRepositoryImpl },

@@ -8,6 +8,7 @@ import { DataService } from './data.service';
 import { USERS_MOCK } from '../../../mocks/users.mocks';
 import { PRODUCTS_MOCK } from '../../../mocks/products.mocks';
 import { VEHICLES_MOCK } from '../../../mocks/vehicles.mocks';
+import { DEALERSHIPS_MOCK } from '../../../mocks/dealerships.mocks';
 
 jest.mock('@faker-js/faker', () => ({
   faker: {
@@ -22,6 +23,15 @@ jest.mock('@faker-js/faker', () => ({
     vehicle: {
       manufacturer: jest.fn(() => 'Toyota'),
       model: jest.fn(() => 'Corolla'),
+    },
+    company: {
+      name: jest.fn(() => 'Concesionario Test'),
+    },
+    location: {
+      city: jest.fn(() => 'Cali'),
+    },
+    continent: {
+      continent: jest.fn(() => 'América'),
     },
     number: {
       int: jest.fn(() => 30),
@@ -38,10 +48,11 @@ jest.mock('@faker-js/faker', () => ({
 describe('DataService', () => {
   let service: DataService;
   let httpMock: HttpTestingController;
-  
+
   const countUsers = 5;
   const countProducts = 5;
   const countVehicles = 5;
+  const countDealerships = 5;
   const pathUrlNode = `${environment.baseUrlNode}/api`;
   const pathUrlSpringBoot = `${environment.baseUrlSpringBoot}/api`;
 
@@ -62,9 +73,9 @@ describe('DataService', () => {
   });
 
   it('debe crearse correctamente', () => {
-      expect(service).toBeTruthy();
+    expect(service).toBeTruthy();
   });
-  
+
   it('debe devolver el listado de usuarios locale', (done) => {
     service.getAllUsersLocal(countUsers).subscribe((users: User[]) => {
       expect(users.length).toEqual(countUsers);
@@ -78,10 +89,17 @@ describe('DataService', () => {
       done();
     });
   });
-  
+
   it('debe devolver el listado de vehículos locale', (done) => {
     service.getAllVehiclesLocal(countVehicles).subscribe((vehicles) => {
       expect(vehicles.length).toEqual(countVehicles);
+      done();
+    });
+  });
+
+  it('debe devolver el listado de concesionarios locale', (done) => {
+    service.getAllDealershipsLocal(countDealerships).subscribe((dealerships) => {
+      expect(dealerships.length).toEqual(countDealerships);
       done();
     });
   });
@@ -104,13 +122,22 @@ describe('DataService', () => {
     req.flush(PRODUCTS_MOCK);
   });
 
-it('debe obtener vehículos desde Node por HTTP', () => {
+  it('debe obtener vehículos desde Node por HTTP', () => {
     service.getAllVehiclesNode(countVehicles).subscribe((vehicles) => {
       expect(vehicles).toEqual(VEHICLES_MOCK);
     });
     const req = httpMock.expectOne(`${pathUrlNode}/vehicles/${countVehicles}`);
     expect(req.request.method).toBe('GET');
     req.flush(VEHICLES_MOCK);
+  });
+
+  it('debe obtener concesionarios desde Node por HTTP', () => {
+    service.getAllDealershipsNode(countDealerships).subscribe((dealerships) => {
+      expect(dealerships.length).toEqual(countDealerships);
+    });
+    const req = httpMock.expectOne(`${pathUrlNode}/dealerships/${countDealerships}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(DEALERSHIPS_MOCK);
   });
 
   it('debe obtener usuarios desde SpringBoot por HTTP', () => {
@@ -131,13 +158,22 @@ it('debe obtener vehículos desde Node por HTTP', () => {
     req.flush(PRODUCTS_MOCK);
   });
 
-    it('debe obtener vehículos desde SpringBoot por HTTP', () => {
+  it('debe obtener vehículos desde SpringBoot por HTTP', () => {
     service.getAllVehiclesSpringBoot(countVehicles).subscribe((vehicles) => {
       expect(vehicles).toEqual(VEHICLES_MOCK);
     });
     const req = httpMock.expectOne(`${pathUrlSpringBoot}/vehicles/${countVehicles}`);
     expect(req.request.method).toBe('GET');
     req.flush(VEHICLES_MOCK);
+  });
+
+  it('debe obtener concesionarios desde SpringBoot por HTTP', () => {
+    service.getAllDealershipsSpringBoot(countDealerships).subscribe((dealerships) => {
+      expect(dealerships.length).toEqual(countDealerships);
+    });
+    const req = httpMock.expectOne(`${pathUrlSpringBoot}/dealerships/${countDealerships}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(DEALERSHIPS_MOCK);
   });
 
 });
