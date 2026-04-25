@@ -7,6 +7,7 @@ import { User } from '../../domain/models/user.model';
 import { DataService } from './data.service';
 import { USERS_MOCK } from '../../../mocks/users.mocks';
 import { PRODUCTS_MOCK } from '../../../mocks/products.mocks';
+import { VEHICLES_MOCK } from '../../../mocks/vehicles.mocks';
 
 jest.mock('@faker-js/faker', () => ({
   faker: {
@@ -17,6 +18,10 @@ jest.mock('@faker-js/faker', () => ({
     person: {
       firstName: jest.fn(() => 'Juan'),
       lastName: jest.fn(() => 'Pérez'),
+    },
+    vehicle: {
+      manufacturer: jest.fn(() => 'Toyota'),
+      model: jest.fn(() => 'Corolla'),
     },
     number: {
       int: jest.fn(() => 30),
@@ -36,6 +41,7 @@ describe('DataService', () => {
   
   const countUsers = 5;
   const countProducts = 5;
+  const countVehicles = 5;
   const pathUrlNode = `${environment.baseUrlNode}/api`;
   const pathUrlSpringBoot = `${environment.baseUrlSpringBoot}/api`;
 
@@ -72,6 +78,13 @@ describe('DataService', () => {
       done();
     });
   });
+  
+  it('debe devolver el listado de vehículos locale', (done) => {
+    service.getAllVehiclesLocal(countVehicles).subscribe((vehicles) => {
+      expect(vehicles.length).toEqual(countVehicles);
+      done();
+    });
+  });
 
   it('debe obtener usuarios desde Node por HTTP', () => {
     service.getAllUsersNode(countUsers).subscribe((users) => {
@@ -91,6 +104,15 @@ describe('DataService', () => {
     req.flush(PRODUCTS_MOCK);
   });
 
+it('debe obtener vehículos desde Node por HTTP', () => {
+    service.getAllVehiclesNode(countVehicles).subscribe((vehicles) => {
+      expect(vehicles).toEqual(VEHICLES_MOCK);
+    });
+    const req = httpMock.expectOne(`${pathUrlNode}/vehicles/${countVehicles}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(VEHICLES_MOCK);
+  });
+
   it('debe obtener usuarios desde SpringBoot por HTTP', () => {
     service.getAllUsersSpringBoot(countUsers).subscribe((users) => {
       expect(users).toEqual(USERS_MOCK);
@@ -107,6 +129,15 @@ describe('DataService', () => {
     const req = httpMock.expectOne(`${pathUrlSpringBoot}/products/${countProducts}`);
     expect(req.request.method).toBe('GET');
     req.flush(PRODUCTS_MOCK);
+  });
+
+    it('debe obtener vehículos desde SpringBoot por HTTP', () => {
+    service.getAllVehiclesSpringBoot(countVehicles).subscribe((vehicles) => {
+      expect(vehicles).toEqual(VEHICLES_MOCK);
+    });
+    const req = httpMock.expectOne(`${pathUrlSpringBoot}/vehicles/${countVehicles}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(VEHICLES_MOCK);
   });
 
 });
