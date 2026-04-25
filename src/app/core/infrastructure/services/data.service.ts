@@ -5,6 +5,7 @@ import { Observable, of } from "rxjs";
 import { environment } from "../../../../environments/environment";
 import { Product, ProductCategory } from "../../domain/models/product.model";
 import { User, UserEngineering } from "../../domain/models/user.model";
+import {Vehicle,VehicleCategory} from "../../domain/models/vehicle.model";
 
 /**
  * Servicio de infraestructura para obtención de datos.
@@ -109,6 +110,31 @@ export class DataService {
         return of(products);
     }
 
+/**
+     * Obtiene el listado de vehículos desde datos locales simulados.
+     *
+     * @param countVehicles - Cantidad de vehículos a solicitar
+     * @returns Observable que emite un arreglo de {@link Vehicle}
+     */
+    getAllVehiclesLocal(countVehicles: number): Observable<Vehicle[]> {
+        const vehicles: Vehicle[] = [];
+        const vehicleCategories: VehicleCategory[] = [
+            'Sedan',
+            'SUV',
+            'Camioneta'
+        ];
+        for(let i = 1; i <= countVehicles ; i++){
+            vehicles.push({
+                id: i,
+                brand: faker.vehicle.manufacturer(),
+                category: faker.helpers.arrayElement(vehicleCategories),
+                price:faker.commerce.price({ min: 1000, max: 100000, dec: 0, symbol: '$' }),
+                year: faker.number.int({ min: 1990, max: 2026 }),
+            })
+        }
+        return of(vehicles);
+    }
+
     /**
      * Obtiene el listado de usuarios desde el backend Node.js.
      *
@@ -155,6 +181,28 @@ export class DataService {
     }
 
     /**
+     * Obtiene el listado de vehículos desde el backend Node.js.
+     *
+     * @remarks
+     * Realiza una petición HTTP GET al endpoint
+     * `/vehicles/{countVehicles}`.
+     *
+     * @param countVehicles - Cantidad de vehículos a solicitar
+     * @returns Observable que emite un arreglo de {@link Vehicle}
+     *
+     * @example
+     * ```ts
+     * this.dataService.getAllVehiclesNode(5).subscribe(vehicles => {
+     *   console.log(vehicles);
+     * });
+     * ```
+     */
+    getAllVehiclesNode(countVehicles: number): Observable<Vehicle[]> {
+        return this.httpClient.get<Vehicle[]>(`${this.nodeUrl}/vehicles/${countVehicles}`);
+    }
+    
+
+    /**
      * Obtiene el listado de usuarios desde el backend SpringBoot.
      *
      * @remarks
@@ -197,6 +245,27 @@ export class DataService {
      */
     getAllProductsSpringBoot(countProducts: number): Observable<Product[]> {
         return this.httpClient.get<Product[]>(`${this.springBootUrl}/products/${countProducts}`);
+    }
+
+/**
+     * Obtiene el listado de vehículos desde el backend SpringBoot.
+     *
+     * @remarks
+     * Realiza una petición HTTP GET al endpoint
+     * `/vehicles/{countVehicles}`.
+     *
+     * @param countVehicles - Cantidad de vehículos a solicitar
+     * @returns Observable que emite un arreglo de {@link Vehicle}
+     *
+     * @example
+     * ```ts
+     * this.dataService.getAllVehiclesSpringBoot(5).subscribe(vehicles => {
+     *   console.log(vehicles);
+     * });
+     * ```
+     */
+    getAllVehiclesSpringBoot(countVehicles: number): Observable<Vehicle[]> {
+        return this.httpClient.get<Vehicle[]>(`${this.springBootUrl}/vehicles/${countVehicles}`);
     }
 
 }
